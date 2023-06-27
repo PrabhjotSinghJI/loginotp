@@ -43,22 +43,26 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextFormField(
-                  controller: numberController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'Login Otp',
+          child: SafeArea(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextFormField(
+                    controller: numberController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: 'Login Otp',
+                    ),
                   ),
                 ),
-              ),
-              CupertinoButton(child: const Text("Login"), onPressed:(){
+                CupertinoButton(child: const Text("Login"), onPressed:(){
 
-              })
-            ],
+                  login(numberController.value.text);
+
+                })
+              ],
+            ),
           ),
         ),
       ),
@@ -67,14 +71,13 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> login(String number) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: number,
+      phoneNumber: "+91$number",
       verificationCompleted: (PhoneAuthCredential credential) async {
         print("sucess");        // await _signInWithAutoVerify(credential);
       },
       timeout: const Duration(seconds: 60),
       verificationFailed: (FirebaseAuthException e) async {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message.toString())));
+        print("failed");
       },
       codeSent: (verificationId, resendToken) async {
       },
