@@ -73,7 +73,6 @@ class _MyAppState extends State<MyApp> {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+91$number",
       verificationCompleted: (PhoneAuthCredential credential) async {
-        print("sucess");        // await _signInWithAutoVerify(credential);
       },
       timeout: const Duration(seconds: 60),
       verificationFailed: (FirebaseAuthException e) async {
