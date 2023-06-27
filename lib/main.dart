@@ -1,48 +1,94 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-   MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   final numberController = TextEditingController();
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-       home: Scaffold(
-         body: Center(
-           child: SizedBox(
-             width: 250,
-             child: TextFormField(
-               controller: numberController,
-               keyboardType: TextInputType.number,
-               onTap: () async {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 250,
+                child: TextFormField(
+                  controller: numberController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: 'Login Otp',
+                  ),
+                ),
+              ),
+              CupertinoButton(child: const Text("Login"), onPressed:(){
 
-login(String number);
-               },
-               decoration: const InputDecoration(
-                 hintText: 'Login Otp',
-
-               ),
-             ),
-           ),
-         ),
-       ),
+              })
+            ],
+          ),
+        ),
+      ),
     );
-
   }
+
   Future<void> login(String number) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: co,
-      verificationCompleted: (PhoneAuthCredential credential) {},
-      verificationFailed: (FirebaseAuthException e) {},
-      codeSent: (String verificationId, int? resendToken) {},
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      phoneNumber: number,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        print("sucess");        // await _signInWithAutoVerify(credential);
+      },
+      timeout: const Duration(seconds: 60),
+      verificationFailed: (FirebaseAuthException e) async {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message.toString())));
+      },
+      codeSent: (verificationId, resendToken) async {
+      },
+      codeAutoRetrievalTimeout: (verificationId) {
+
+      },
     );
   }
+
+
+
+  // Future<void> _signInManual() async {
+  //   final phoneAuth = PhoneAuthProvider.credential(
+  //       verificationId: _verificationCode, smsCode: otpController.text);
+  //   try {
+  //
+  //     await FirebaseAuth.instance.signInWithCredential(phoneAuth);
+  //
+  //   } on FirebaseAuthException catch (e) {
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         duration: const Duration(seconds: 5), content: Text(e.message.toString())));
+  //   }
+  // }
 }
