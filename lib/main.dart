@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+
   State<MyApp> createState() => _MyAppState();
 }
 
@@ -26,6 +27,7 @@ class _MyAppState extends State<MyApp> {
   final numberController = TextEditingController();
 
   @override
+
   void initState() {
 
     super.initState();
